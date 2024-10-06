@@ -49,6 +49,22 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1728018373,
+        "narHash": "sha256-NOiTvBbRLIOe5F6RbHaAh6++BNjsb149fGZd1T4+KBg=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "bc947f541ae55e999ffdb4013441347d83b00feb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-patch": {
+      "locked": {
         "lastModified": 1728130147,
         "narHash": "sha256-iTsBnBiEFfUX0NYXQzPv/kh//Mhf+AmI8/EQapT+wzQ=",
         "owner": "illustris",
@@ -103,6 +119,7 @@
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
+        "nixpkgs-patch": "nixpkgs-patch",
         "registry": "registry",
         "terranix": "terranix"
       }

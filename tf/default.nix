@@ -4,8 +4,7 @@
 	location = "us";
 	region = "${location}-west1";
 	zone = region + "-b";
-	drv = self.packages.x86_64-linux.image;
-	fileName = pipe drv [
+	fileName = x: pipe x [
 		builtins.readDir
 		attrNames
 		(filter (hasPrefix "nixos-image"))
@@ -61,26 +60,26 @@ in {
 			inherit location;
 		};
 
-		google_storage_bucket_object.imagefile = {
-			name = fileName;
-			source = concatStringsSep "/" [ drv fileName ];
+		google_storage_bucket_object = mapAttrs (n: v: {
+			name = concatStringsSep "-" [ n (fileName v) ];
+			source = concatStringsSep "/" [ v (fileName v) ];
 			bucket = tv "google_storage_bucket.images.id";
-		};
+		}) self.images.x86_64-linux;
 
-		google_compute_image.image = {
-			name = rv;
+		google_compute_image = mapAttrs (name: v: {
+			name = toLower name;
 			project = rv;
-			raw_disk.source = tv "google_storage_bucket_object.imagefile.media_link";
-		};
+			raw_disk.source = tv "google_storage_bucket_object.${name}.media_link";
+		}) self.images.x86_64-linux;
 
-		google_compute_instance.instance = {
-			name = rv;
+		google_compute_instance = mapAttrs (name: v: {
+			name = toLower name;
 
 			boot_disk = {
 				auto_delete = true;
 
 				initialize_params = {
-					image = tv "resource.google_compute_image.image.id";
+					image = tv "resource.google_compute_image.${name}.id";
 					size = 10;
 				};
 			};
@@ -98,6 +97,6 @@ in {
 				preemptible = true;
 				provisioning_model = "SPOT";
 			};
-		};
+		}) self.images.x86_64-linux;
 	};
 }
